@@ -1,0 +1,65 @@
+<!DOCTYPE html>
+<html>
+<head>
+
+</head>
+
+<body>
+    <canvas id="myChart" width="400" height="400" border='1'></canvas>
+    
+    <input type='button' onclick='sendChangeReq();' value='Change Data!'/>
+    
+<script type='text/javascript' src='/js/chart.js'></script> 
+<script type='text/javascript' src='/socket.io/socket.io.js'></script>  
+
+<script type='text/javascript'>
+        var socket = io.connect();
+        socket.on('message', function (mydata) {
+            change(mydata);
+        });
+        
+        var ctx = document.getElementById("myChart").getContext("2d");
+        var data = {
+    	labels : ["Jan","Feb","Mar","Apr","May","Jun","Jul"],
+    	datasets : [
+    		{
+    			fillColor : "rgba(255,0,0,0.5)",
+    			strokeColor : "rgba(220,220,220,1)",
+    			data : [10,20,30,40,50,60,70]
+    		}
+    		
+    	]
+        };
+        
+        var c = new Chart(ctx);
+        c.Bar(data);
+        
+        var isEven = true;
+        
+        
+        function sendChangeReq(){
+            var str;
+            if(isEven){
+                str = "70,60,50,40,30,20,10"
+                isEven = false;
+            }else{
+                str = "10,20,30,40,50,60,70"
+                isEven = true;
+            }
+            
+            socket.emit('messages',str);
+        }
+        
+        function change(str){
+            //console.log('received data');
+			data.datasets[0].data=str.split(',');
+			c.Bar(data);
+		}
+        
+    </script>            
+</body>
+
+
+
+
+</html>

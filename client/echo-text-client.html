@@ -1,0 +1,24 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <script type="text/javascript" src="/socket.io/socket.io.js">
+    </script>
+    <script type="text/javascript">
+        var socket = io.connect();
+        socket.on('message', function (mydata) {
+            document.getElementById('lblOutput').innerHTML = mydata;
+        });
+        
+        function whenKeyUp(){
+            socket.emit('messages',document.getElementById('txtInput').value);
+        }
+    </script>
+</head>
+
+<body >
+    <input type='text' name='txtInput' id='txtInput' onkeyup='whenKeyUp()'/>
+    <p></p>
+    <span id='lblOutput' name='lblOutput'/>
+</body>
+
+</html>
